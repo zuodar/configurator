@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Wrapper from "./components/Wrapper";
+import State from "./components/State";
+import Configurator from "./components/Configurator";
+import Cart from "./components/Cart";
 
-function App() {
+const App = () => {
+  const [cart, setCart] = useState([]);
+  const addToCart = readyProduct => setCart([...cart, readyProduct]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      style={{
+        textAlign: "center",
+        padding: "20px 10px",
+        display: "flex",
+        height: "calc(100% - 40px)"
+      }}
+    >
+      <Wrapper color="white">
+        <State printState={cart} />
+      </Wrapper>
+      <Wrapper color="#e6e6e6">
+        <Configurator addToCart={addToCart} />
+      </Wrapper>
+      <Wrapper color="white">
+        <Cart
+          setCart={setCart}
+          cart={cart}
+        />
+      </Wrapper>
     </div>
   );
-}
+};
 
 export default App;
