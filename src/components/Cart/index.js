@@ -1,32 +1,39 @@
 import React, { useState } from "react";
 import { repeatElement } from "../../utils";
-import {groupBy, equals} from 'ramda';
+import {groupWith, equals} from 'ramda';
 
-const calculatePrice = product => {
-  const price1 =
-    product.kitBase_S60.quantity * product.kitBase_S60.regular_price;
-  const price2 = product.damper.quantity * product.damper.regular_price;
-  const price3 =
-    product.wallBracket45.quantity * product.wallBracket45.regular_price;
-  const price4 =
-    product.track[0].quantity *
-    product.track[0].regular_price *
-    product.quantity;
-  return price1 + price2 + price3 + price4;
+const price = product => product.quantity * product.regular_price;
+
+
+const totalPrice = product => {
+    const {damper, kitBase_S60, wallBracket45, track: [firstTrack]} = product;
+    return price(kitBase_S60)
+        +price(wallBracket45)
+        +price(damper)
+        +price(firstTrack) * product.quantity
 };
 
-const removeByIndex = (array, i) => array.filter((_, index) => index !== i);
-const cloneByIndex = (array, i, quantity) => [...array, ...repeatElement(array[i], quantity)];
+  const removeByIndex = (array, i) => array.filter((_, index) => index !== i);
+  const cloneByIndex = (array, i, quantity) => [...array, ...repeatElement(array[i], quantity)];
 
-const Cart = ({ cart, setCart }) => {
-  const remove = index => setCart(removeByIndex(cart, index));
-  const clone = (index, quantity) => setCart(cloneByIndex(cart, index, quantity ));
-  const cartTotal = cart.reduce(
-    (val, cartItem) => val + calculatePrice(cartItem.readyProduct),
-    0
-  );
+  const Cart = ({ cart, setCart }) => {
+      // const remove = index => setCart(removeByIndex(cart, index));
+      // const clone = (index, quantity) => setCart(cloneByIndex(cart, index, quantity ));
+      const filterOutSame = (arr, item) => arr.filter(arrItem=>!equals(item,arrItem))
+      const removeGroup = ([oneOfTheGroup]) => setCart(filterOutSame(cart, oneOfTheGroup));
+      const setGroupQuantity = ([oneOfTheGroup], quantity) => {
+          setCart([
+              ...filterOutSame(cart, oneOfTheGroup),
+              ...repeatElement(oneOfTheGroup, parseInt(quantity))
+          ]);
+      }
 
-  const cartGroupedByIdentity = groupBy(cart, equals);
+      const cartTotal = cart.reduce(
+        (val, cartItem) => val + totalPrice(cartItem.readyProduct),
+        0
+      );
+
+      const cartGroupedByIdentity = groupWith(equals, cart);
 
   return (
     <div style={{ position: "relative", height: "calc(100% - 90px)" }}>
@@ -34,9 +41,9 @@ const Cart = ({ cart, setCart }) => {
       <hr />
       {cartGroupedByIdentity.map((group, index) => (
         <div key={index}>
-          <button onClick={() => remove(index)}> Remove </button>
-          <p> {group.readyProduct.name} </p>
-          <p> {calculatePrice(group[0].readyProduct * group.length)} </p>
+          <button onClick={() => removeGroup(group)}> Remove </button>
+          <p> {group[0].readyProduct.name} </p>
+          <p> {totalPrice(group[0].readyProduct) * group.length} </p>
           <p> ×{group[0].readyProduct.kitBase_S60.quantity} </p>
 
           <input
@@ -44,7 +51,7 @@ const Cart = ({ cart, setCart }) => {
             min="1"
             max="99"
             value={group.length}
-            onChange={e => clone(index, e.target.value)}
+            onChange={e => setGroupQuantity(group, e.target.value)}
           />
           <hr />
         </div>

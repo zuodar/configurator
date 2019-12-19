@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Wrapper from "./components/Wrapper";
 import State from "./components/State";
 import Configurator from "./components/Configurator";
