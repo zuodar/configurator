@@ -1,48 +1,94 @@
-import React, { useState } from "react";
-import { repeatElement } from "../../utils";
+import React from "react";
 
-const damperrr = (qty, dmp) => ({
-  product_id: 7263,
-  quantity: qty * dmp,
-  name: "Domykacz Seria S",
-  regular_price: "119.00"
-});
-
-const track = {
-  product_id: 14729,
-  quantity: 200,
-  name: "Prowadnica",
-  regular_price: "0.27"
-};
-
-const configuredProduct = (qty, dmp) => ({
-  readyProduct: {
-    name: "System do drzwi przesuwnych na 1 skrzydło drzwi",
-    sku: "S120",
-    track: repeatElement(track, parseInt(qty)),
-    kitBase_S60: {
-      product_id: 327,
-      quantity: qty,
-      name: "System S60",
-      regular_price: "55.00"
-    },
-    damper: damperrr(qty, dmp),
-    wallBracket45: {
-      product_id: 7274,
-      quantity: qty * 6,
-      name: "Klamra ścienna aluminiowa 45",
-      regular_price: "3.50"
-    },
-    quantity: qty
-  }
-});
-
-const Configurator = ({ addToCart }) => {
-  const [dmp, setDmp] = useState(0);
-  const [qty, setQty] = useState(1);
-  return (
+const TrackBtn = ({ trackLength, setTrackLength, length }) => 
+<button 
+  style={{
+    marginLeft: 12,
+    width: "60px",
+    height: 45,
+    backgroundColor: trackLength == length ? "white" : "#4CAF50",
+    color: trackLength == length ? "#4CAF50" : "white",
+    border: "none",
+    textAlign: "center",
+    textDecoration: "none",
+    display: "inline-block",
+    borderRadius: "8px",
+    cursor: "pointer"
+  }}
+  onClick={() => setTrackLength(length)}
+  >
+  {length} cm
+</button> 
+const Configurator = ({ addToCart, configuredProduct, dmp, setDmp, qty, setQty, trackLength , setTrackLength, mountingWall, setMountingWall  }) => (
     <>
       <p> Configurator {qty} </p>
+      <hr />
+      <div>
+        Prowadnica
+        <TrackBtn
+          trackLength={trackLength}
+          setTrackLength={setTrackLength}
+          length={120}
+        />
+        <TrackBtn
+          trackLength={trackLength}
+          setTrackLength={setTrackLength}
+          length={180}
+        />
+        <TrackBtn
+          trackLength={trackLength}
+          setTrackLength={setTrackLength}
+          length={200}
+        />
+        <TrackBtn
+          trackLength={trackLength}
+          setTrackLength={setTrackLength}
+          length={240}
+        />
+      </div>
+
+      <hr />
+      <div>
+        Mocowanie
+        <button
+          style={{
+            marginLeft: 20,
+            width: "90px",
+            height: 45,
+            backgroundColor: mountingWall == 0 ? "white" : "#4CAF50",
+            color: mountingWall == 0 ? "#4CAF50" : "white",
+            border: "none",
+            textAlign: "center",
+            textDecoration: "none",
+            display: "inline-block",
+            borderRadius: "8px 0 0 8px",
+            cursor: "pointer"
+          }}
+          onClick={() => setMountingWall(0)}
+        >
+          Do stropu
+        </button>
+        <button
+          style={{
+            width: "90px",
+            height: 45,
+            backgroundColor: mountingWall == 1 ? "white" : "#4CAF50",
+            color: mountingWall == 1 ? "#4CAF50" : "white",
+            border: "none",
+            textAlign: "center",
+            textDecoration: "none",
+            display: "inline-block",
+            borderRadius: "0 8px 8px 0",
+            cursor: "pointer"
+          }}
+          onClick={() => setMountingWall(1)}
+        >
+          Do ściany
+        </button>
+      </div>
+
+
+
       <hr />
       <div>
         Domykacz
@@ -62,7 +108,7 @@ const Configurator = ({ addToCart }) => {
           }}
           onClick={() => setDmp(0)}
         >
-          Nie{" "}
+          Nie
         </button>
         <button
           style={{
@@ -79,10 +125,10 @@ const Configurator = ({ addToCart }) => {
           }}
           onClick={() => setDmp(1)}
         >
-          {" "}
-          Tak{" "}
+          Tak
         </button>
       </div>
+
 
       <hr />
       <div style={{ display: "flex" }}>
@@ -110,14 +156,13 @@ const Configurator = ({ addToCart }) => {
             borderRadius: 8,
             cursor: "pointer"
           }}
-          onClick={() => addToCart(configuredProduct(qty, dmp))}
+          onClick={() => addToCart(configuredProduct(qty, dmp, trackLength, mountingWall))}
         >
-          {" "}
+          
           Add to Cart {qty}
         </button>
       </div>
     </>
-  );
-};
+)
 
 export default Configurator;
