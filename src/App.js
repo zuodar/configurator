@@ -21,7 +21,7 @@ const configuredProduct = (qty, dmp, trackLength, mountingWall) => ({
     damper: damperrr(qty, dmp),
     wallBracket45: wallBracket45(qty, trackLength, mountingWall),
     quantity: qty,
-    sku: `S120.${ trackLength + '.70' + dmp}`,
+    sku: `S120.${ trackLength + '.70' + dmp + '.' + (600 + qty * Math.floor((trackLength + 14) / 30) * mountingWall) }`,
   }
 });
 

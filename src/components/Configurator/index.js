@@ -3,8 +3,8 @@ import React from "react";
 const TrackBtn = ({ trackLength, setTrackLength, length }) => 
 <button 
   style={{
-    marginLeft: 12,
-    width: "60px",
+    marginLeft: 6,
+    width: 40,
     height: 45,
     backgroundColor: trackLength == length ? "white" : "#4CAF50",
     color: trackLength == length ? "#4CAF50" : "white",
@@ -17,14 +17,14 @@ const TrackBtn = ({ trackLength, setTrackLength, length }) =>
   }}
   onClick={() => setTrackLength(length)}
   >
-  {length} cm
+  {length} 
 </button> 
 const Configurator = ({ addToCart, configuredProduct, dmp, setDmp, qty, setQty, trackLength , setTrackLength, mountingWall, setMountingWall  }) => (
     <>
       <p> Configurator {qty} </p>
       <hr />
       <div>
-        Prowadnica
+        Prowadnica [cm]
         <TrackBtn
           trackLength={trackLength}
           setTrackLength={setTrackLength}
@@ -44,6 +44,11 @@ const Configurator = ({ addToCart, configuredProduct, dmp, setDmp, qty, setQty, 
           trackLength={trackLength}
           setTrackLength={setTrackLength}
           length={240}
+        />
+        <TrackBtn
+          trackLength={trackLength}
+          setTrackLength={setTrackLength}
+          length={300}
         />
       </div>
 

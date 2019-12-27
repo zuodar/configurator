@@ -14,7 +14,7 @@ export const track = (trackLength) => ({
 
 export const wallBracket45 = (qty, trackLength, mountingWall) => ({
     product_id: 7274,
-    quantity: qty * 6 * mountingWall,
+    quantity: qty * Math.floor((trackLength + 14) / 30) * mountingWall,
     name: "Klamra ścienna aluminiowa 45",
     regular_price: "3.50"
-}); 
+});  
